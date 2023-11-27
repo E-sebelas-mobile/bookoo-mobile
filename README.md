@@ -36,7 +36,7 @@ Sebuah versi mobile dari website kami, yaitu website bertema literasi oleh yang 
 6. **Login** 📔
    - **Penjelasan:** Mengurus page login serta fungsinya, yang termasuk pengurusan akun.
    - **Anggota:** **Gyanamurti Adhikara Bano**
-   - 
+     
 7. **Deployment** 📔
    - **Penjelasan:** Mengurus deployment aplikasi ke cloud platform menjadi aplikasi utuh.
    - **Anggota:** **Rafli Aditya Shaista**
