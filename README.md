@@ -9,9 +9,9 @@
 ### **Tautan APK:**
 
 ### **Deskripsi Aplikasi:**
-Sebuah versi mobile dari website kami, yaitu website bertema literasi oleh yang menyediakan platform untuk user agar dapat membaca buku dengan katalog kami, review buku favorit, fitur personal diary, dan disertai dengan fungsi servis seperti request buku dan . Terinspirasi dari website bertema literasi terkemuka seperti Goodreads dan LibraryThing.
+Sebuah versi mobile dari website kami, yaitu website bertema literasi oleh yang menyediakan platform untuk user agar dapat membaca buku dengan katalog kami, review buku favorit, fitur personal diary, dan disertai dengan fungsi servis seperti request buku dan report . Terinspirasi dari website bertema literasi terkemuka seperti Goodreads dan LibraryThing.
 
-### **Daftar Modul:** 📋
+### **Daftar Modul/Tugas & Peran:** 📋
 
 1. **Modul Membaca Buku (Read Book)** 🔍 
    - **Penjelasan:** Berfungsi sebagai mesin pencarian buku. Ketika judul buku di-hover, akan muncul 2 opsi: "Read" yang memungkinkan user untuk membaca buku dan tombol favorit (logo hati) yang memungkinkan user untuk menambahkan buku ke dalam daftar favorit mereka. Bisa filter search buku nambahin fitur review dan rating.
@@ -32,6 +32,22 @@ Sebuah versi mobile dari website kami, yaitu website bertema literasi oleh yang 
 5. **Modul Diary/Personal Journal** 📔
    - **Penjelasan:** User dapat mengetik apapun didalamnya dan mencatat pemikiran, pengalaman, dan refleksi pribadi mereka mengenai literasinya (User harus sign up/memiliki akun)
    - **Anggota:** **Hishah Khalishah**
+  
+6. **Login** 📔
+   - **Penjelasan:** Mengurus page login serta fungsinya, yang termasuk pengurusan akun.
+   - **Anggota:** **Gyanamurti Adhikara Bano**
+   - 
+7. **Deployment** 📔
+   - **Penjelasan:** Mengurus deployment aplikasi ke cloud platform menjadi aplikasi utuh.
+   - **Anggota:** **Rafli Aditya Shaista**
+
+8. **Main Page/Design** 📔
+   - **Penjelasan:** Membuat design yang dapat digunakan oleh modul-modul lain, agar design aplikasi secara keseluruhan konsisten
+   - **Anggota:** **Maulana Afzaal Wibowo**
+  
+9. **Merge** 📔
+   - **Penjelasan:** Mengurus merge dan memperbaiki kendala yang muncul dengannya, agar aplikasi minim kesulitan & error.
+   - **Anggota:** **Andhika Finnanda Rayhan & Hishah Khalishah**
 
 ### **Role:** 🎭
 **User:** Dapat melihat katalog buku di awal, namun, untuk mngakses fungsi lainnya, harus login terlebih dahulu.
