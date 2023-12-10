@@ -2,23 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'login.dart';
+import 'forum.dart'; // Add this import to use ForumPage
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.username}) : super(key: key);
   final String? username;
+  
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  String? username;
+  class _MyHomePageState extends State<MyHomePage> {
+    String? username;
+    int _selectedIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    username = widget.username;
+    @override
+    void initState() {
+      super.initState();
+      username = widget.username;
+    }
+  
+   void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    switch (index) {
+    case 1: // Assuming the "Forum" button is at index 1
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ForumPage()),
+      );
+      break;
+    // Add cases for other indices if needed
+    // ...
   }
+}
+
 
   Future<void> _showLogoutConfirmation(BuildContext context) async {
     return showDialog(
@@ -125,26 +146,63 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-              GridView.count(
+               GridView.count(
                 primary: true,
                 padding: const EdgeInsets.all(20),
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 crossAxisCount: 3,
                 shrinkWrap: true,
-                children: const [
-                  // Your InventoryItem widgets here
-                  InventoryCard(InventoryItem(
-                      "Placeholder 1", Icons.library_books, Color(0xFF164863))),
-                  InventoryCard(InventoryItem(
-                      "Placeholder 2", Icons.create, Color(0xFF427D9D))),
-                  InventoryCard(InventoryItem(
-                      "Placeholder 3", Icons.logout, Color(0xFF9BBEC8))),
+                children: [
+                  InventoryCard(
+                    InventoryItem("Placeholder 1", Icons.library_books, Color(0xFF164863)),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ForumPage()),
+                      );
+                    },
+                  ),
+                  InventoryCard(
+                    InventoryItem("Placeholder 2", Icons.create, Color(0xFF427D9D)),
+                  ),
+                  InventoryCard(
+                    InventoryItem("Placeholder 3", Icons.logout, Color(0xFF9BBEC8)),
+                  ),
                 ],
               ),
             ],
           ),
         ),
+      ),
+       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed, // This is used when there are more than three items
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.forum),
+            label: 'Forum',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_box),
+            label: 'Request',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart),
+            label: 'Report',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Journal',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Theme.of(context).primaryColor, // or any other color
+        unselectedItemColor: Colors.grey,
+        onTap: _onItemTapped,
       ),
     );
   }
@@ -160,15 +218,16 @@ class InventoryItem {
 
 class InventoryCard extends StatelessWidget {
   final InventoryItem item;
+  final Function()? onTap;
 
-  const InventoryCard(this.item, {Key? key}) : super(key: key);
+  InventoryCard(this.item, {Key? key, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
       color: item.color,
       child: InkWell(
-        onTap: () {
+        onTap: onTap ?? () {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
