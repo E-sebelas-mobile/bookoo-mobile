@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'login.dart';
 import 'forum.dart'; // Add this import to use ForumPage
 import 'bar.dart';
-
+import 'reportbookstuff/menuReport.dart';
 
 class InventoryItem {
   final String name;
@@ -85,6 +85,8 @@ class _MyHomePageState extends State<MyHomePage> {
         return _buildHomePage();
       case 1:
         return ForumPage();
+      case 3:
+        return username != null ? ReportBookPage() : _buildLoginPrompt();
       // Add cases for other indices if needed
       default:
         return Container(); // Return an empty container or handle default case
@@ -92,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildHomePage() {
-        return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: const Text('Bookoo'),
         actions: [
@@ -129,8 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-
-       body: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -187,6 +188,24 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Widget _buildLoginPrompt() {
+  return AlertDialog(
+    title: const Text('Login Required'),
+    content: const Text('You must log in to access this feature.'),
+    actions: <Widget>[
+      TextButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginForm()),
+          );
+        },
+        child: const Text('Login'),
+      )
+    ],
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -219,7 +238,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   // Logout logic (replace <APP_URL_KAMU> with your app's URL)
                   final request = context.read<CookieRequest>();
                   final response = await request.logout(
-                    "https://bookoo-e11-tk.pbp.cs.ui.ac.id/auth/logout/",
+                    "http://localhost:8000/auth/logout/",
                   );
                   String message = response["message"];
                   String uname = response["username"];
@@ -248,5 +267,4 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
-
 }
