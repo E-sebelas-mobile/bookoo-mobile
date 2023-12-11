@@ -84,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 0:
         return _buildHomePage();
       case 1:
-        return ForumPage();
+        return username != null ?  ForumPage() : _buildLoginPrompt();
       case 3:
         return username != null ? ReportBookPage() : _buildLoginPrompt();
       // Add cases for other indices if needed
