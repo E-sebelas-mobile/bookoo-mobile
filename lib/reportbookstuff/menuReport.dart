@@ -1,8 +1,10 @@
+import 'package:bookoo_mobile/models/forums.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:bookoo_mobile/reportbookstuff/report.dart';
 import 'package:bookoo_mobile/user_utility.dart';
+import 'package:bookoo_mobile/reportbookstuff/reportForm.dart';
 
 class ReportBookPage extends StatefulWidget {
   const ReportBookPage({Key? key}) : super(key: key);
@@ -23,27 +25,25 @@ class _ReportBookPageState extends State<ReportBookPage> {
   }
 
   Future<List<Product>> fetchProduct() async {
-    try {
-      var url = Uri.parse('http://localhost:8000/modulreport/json-modif/');
-      var response = await http.post(
-        url,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: json.encode({'user_id': UserUtility.user_id}),
-      );
+    // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+    var url = Uri.parse(
+        'http://localhost:8000/modulreport/json/${UserUtility.user_id.toString()}/');
+    var response = await http.get(
+      url,
+      headers: {"Content-Type": "application/json"},
+    );
 
-      var data = jsonDecode(utf8.decode(response.bodyBytes));
-      List<Product> products = [];
-      for (var productData in data['products']) {
-        Product product = Product.fromJson(productData);
-        products.add(product);
+    // melakukan decode response menjadi bentuk json
+    var data = jsonDecode(utf8.decode(response.bodyBytes));
+
+    // melakukan konversi data json menjadi object Product
+    List<Product> list_product = [];
+    for (var d in data) {
+      if (d != null) {
+        list_product.add(Product.fromJson(d));
       }
-      return products;
-    } catch (err) {
-      // Handle error, maybe log it or show an error message
-      return [];
     }
+    return list_product;
   }
 
   Future<void> _fetchProduct() async {
@@ -68,12 +68,28 @@ class _ReportBookPageState extends State<ReportBookPage> {
     });
   }
 
-  void _deleteReport(int index) {
-    // Implement the logic to delete the report at the given index
-    // from your backend or local storage.
-    setState(() {
-      _filteredProducts.removeAt(index);
-    });
+  Future<void> _deleteReport(int index) async {
+    try {
+      int reportIdToDelete = _filteredProducts[index]
+          .pk; // Assuming 'pk' is the ID field of your Product model
+      print(reportIdToDelete);
+      var url = Uri.parse(
+          'http://localhost:8000/modulreport/hapuslaporan/$reportIdToDelete/'); // Replace with your Django endpoint URL
+      var response = await http.post(url);
+
+      if (response.statusCode == 200) {
+        print('Report deleted successfully');
+        setState(() {
+          _filteredProducts.removeAt(index);
+        });
+      } else {
+        print('Failed to delete report');
+        // Handle failure, show an error message or retry logic
+      }
+    } catch (error) {
+      print('Exception occurred while deleting report: $error');
+      // Handle exception or error, show an error message or retry logic
+    }
   }
 
   @override
@@ -84,8 +100,12 @@ class _ReportBookPageState extends State<ReportBookPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Implement the logic to navigate to the create report screen
-          // or show a dialog for creating a new report.
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BookReportForm(),
+            ),
+          );
         },
         child: Icon(Icons.add),
       ),
