@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'registration.dart'; // Assuming your registration page is in 'registration.dart'
 import 'menu.dart';
 import 'menuAdmin.dart';
+import 'user_utility.dart';
 
 void main() {
   runApp(const LoginForm());
@@ -45,14 +46,16 @@ class _LoginPageState extends State<LoginPage> {
     String password = _passwordController.text;
     try {
       final response = await request.login(
-        "https://bookoo-e11-tk.pbp.cs.ui.ac.id/auth/login/",
+        "http://localhost:8000/auth/login/",
         {'username': username, 'password': password},
       );
 
       if (request.loggedIn) {
         String message = response['message'];
         String uname = response['username'];
-
+        int user_id = response['user_id'];
+        UserUtility.user_id = user_id;
+        UserUtility.username = uname;
         // Check if the user is an admin
         bool isAdmin = response['is_admin'] ?? false;
 
