@@ -43,7 +43,7 @@ class _ReportBookPageState extends State<ReportBookPage> {
         list_product.add(Product.fromJson(d));
       }
     }
-    return list_product;
+    return list_product.reversed.toList();
   }
 
   Future<void> _fetchProduct() async {
@@ -70,9 +70,8 @@ class _ReportBookPageState extends State<ReportBookPage> {
 
   Future<void> _deleteReport(int index) async {
     try {
-      int reportIdToDelete = _filteredProducts[index]
-          .pk; // Assuming 'pk' is the ID field of your Product model
-      print(reportIdToDelete);
+      int reportIdToDelete = _filteredProducts[index].pk; // Assuming 'pk' is the ID field of your Product model
+      // print(reportIdToDelete);
       var url = Uri.parse(
           'http://localhost:8000/modulreport/hapuslaporan/$reportIdToDelete/'); // Replace with your Django endpoint URL
       var response = await http.post(url);
@@ -103,9 +102,15 @@ class _ReportBookPageState extends State<ReportBookPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => BookReportForm(),
+              builder: (context) => BookReportForm(
+                refreshCallback: _fetchProduct, // Pass the callback function
+              ),
             ),
-          );
+          ).then((_) {
+            if (mounted) {
+              _fetchProduct(); // Refresh data when returning from BookReportForm
+            }
+          });
         },
         child: Icon(Icons.add),
       ),
