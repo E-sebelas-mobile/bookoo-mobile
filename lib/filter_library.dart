@@ -12,67 +12,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'filter_library.dart';
 import 'reportbookstuff/menuReport.dart';
 
-class InventoryItem {
-  final String name;
-  final IconData icon;
-  final Color color;
-
-  const InventoryItem(this.name, this.icon, this.color);
-}
-
-class InventoryCard extends StatelessWidget {
-  final InventoryItem item;
-  final Function()? onTap;
-
-  InventoryCard(this.item, {Key? key, this.onTap}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: item.color,
-      child: InkWell(
-        onTap: onTap ??
-            () {
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                  SnackBar(
-                    content: Text("Placeholder for ${item.name}!"),
-                  ),
-                );
-            },
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class FilteredLibraryPage extends StatefulWidget {
   final String? username;
-  final List filtered;
-  const FilteredLibraryPage({Key? key, required this.filtered, required this.username}) : super(key: key);
+  final String? search;
+  const FilteredLibraryPage({Key? key,  required this.username, required this.search}) : super(key: key);
   
-
   @override
   _FilteredLibraryPageState createState() => _FilteredLibraryPageState();
 }
@@ -80,6 +25,7 @@ class FilteredLibraryPage extends StatefulWidget {
 class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
   String? username;
   int _selectedIndex = 0;
+  String? search;
 
   TextEditingController controller = new TextEditingController();
   List<Books> library = [];
@@ -94,6 +40,7 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
   }
 
   Future<List<Books>> fetchProduct() async {
+    
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
     var url = Uri.parse(
         'https://bookoo-e11-tk.pbp.cs.ui.ac.id/get_books_json/');
@@ -110,7 +57,17 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
         library.add(Books.fromJson(d));
       }
     }
-    return library;
+    if (widget.search != null) {
+    for (var d in library){
+      if (d.fields.title.toLowerCase().contains(widget.search??'default value') ){
+        filtered.add(d);
+      }
+    }
+    }
+    if (widget.search == null) {
+      return library;
+    }
+    return filtered;
   }
 
   @override
@@ -120,16 +77,8 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
   }
 
   onSearchTextChanged(String text) async {
-    debugPrint(text);
-    for (var d in library) {
-      if (d.fields.title.toLowerCase().contains(text.toLowerCase())){
-        filtered.add(d);
-        debugPrint(d.fields.title);
-      }
-    }
-    for (var d in filtered) {
-      debugPrint(d.fields.title);
-    }
+    search=text;
+    debugPrint(search);
   }
 
 
@@ -208,7 +157,7 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                FilteredLibraryPage(filtered: filtered, username: username),
+                                                FilteredLibraryPage(search: search, username: username),
                                           ));
               }, 
               child: const Text('Search'),),
@@ -243,14 +192,14 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
                           children: [
                             const SizedBox(height: 10),
                             Text(
-                              filtered[index].fields.title,
+                              "${snapshot.data![index].fields.title}",
                               style: const TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 10),
-                            Text(filtered[index].fields.author),
+                            Text("${snapshot.data![index].fields.author}"),
                             const SizedBox(height: 10),
                             ListTile(
                                 onTap: () {
@@ -258,7 +207,7 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
                                   '${snapshot.data![index].fields.link}');
                                   _launchUrl(bookURI);
                                 },
-                                title: Text(filtered[index].fields.link)),
+                                title: Text("${snapshot.data![index].fields.link}")),
                             ListTile(
                                 onTap: () {
                                   

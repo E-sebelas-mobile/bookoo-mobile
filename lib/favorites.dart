@@ -50,39 +50,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
   Widget build(BuildContext context) {
   return Scaffold(appBar: AppBar(
         title: const Text('Bookoo'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Row(
-              children: [
-                if (username != null)
-                  Text(
-                    'Hello $username!',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                IconButton(
-                  icon: const Icon(Icons.person),
-                  iconSize: 40.0,
-                  onPressed: () {
-                    if (username != null) {
-                      _showLogoutConfirmation(context);
-                    } else {
-                      // Navigate to login form
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginForm()),
-                      );
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
       body: Column( 
           children: [

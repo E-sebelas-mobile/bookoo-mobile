@@ -81,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String? username;
   int _selectedIndex = 0;
   int? userid=UserUtility.user_id;
+  String? search;
 
   TextEditingController controller = new TextEditingController();
   List<Books> library = [];
@@ -121,12 +122,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   onSearchTextChanged(String text) async {
-    List<Books> filtered = [];
-    for (var d in library) {
-      if (d.fields.title.contains(text)){
-        filtered.add(d);
-      }
-    }
+    search=text.toLowerCase();
+    debugPrint(search);
   }
 
 
@@ -202,12 +199,14 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 24.0),
             ElevatedButton(
               onPressed: (){
+                
                 Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                FilteredLibraryPage(filtered: filtered, username: username),
+                                                FilteredLibraryPage( username: username,search:search),
                                           ));
+                debugPrint(search);
               }, 
               child: const Text('Search'),),
             const SizedBox(height: 24.0),
