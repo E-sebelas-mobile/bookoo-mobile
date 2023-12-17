@@ -5,6 +5,8 @@ import 'menu.dart';
 import 'login.dart';
 import 'forum.dart'; // Add this import to use ForumPage
 import 'bar.dart';
+import 'package:bookoo_mobile/main.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:bookoo_mobile/models/books.dart';

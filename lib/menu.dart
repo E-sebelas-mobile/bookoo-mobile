@@ -424,7 +424,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   // Logout logic (replace <APP_URL_KAMU> with your app's URL)
                   final request = context.read<CookieRequest>();
                   final response = await request.logout(
-                    "https://bookoo-e11-tk.pbp.cs.ui.ac.id/logout/",
+                    "https://bookoo-e11-tk.pbp.cs.ui.ac.id/auth/logout/",
                   );
                   String message = response["message"];
                   String uname = response["username"];
