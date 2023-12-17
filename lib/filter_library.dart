@@ -11,6 +11,9 @@ import 'package:bookoo_mobile/models/books.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'filter_library.dart';
 import 'reportbookstuff/menuReport.dart';
+import 'user_utility.dart';
+import 'favorites.dart';
+import 'reportbookstuff/menuReport.dart';
 
 
 class FilteredLibraryPage extends StatefulWidget {
@@ -25,7 +28,10 @@ class FilteredLibraryPage extends StatefulWidget {
 class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
   String? username;
   int _selectedIndex = 0;
+  int? userid=UserUtility.user_id;
   String? search;
+  String? title;
+  final _formKey = GlobalKey<FormState>();
 
   TextEditingController controller = new TextEditingController();
   List<Books> library = [];
@@ -79,6 +85,7 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
   onSearchTextChanged(String text) async {
     search=text;
     debugPrint(search);
+    debugPrint(userid.toString());
   }
 
 
@@ -90,6 +97,8 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
         return username != null ?  ForumPage() : _buildLoginPrompt();
       case 3:
         return username != null ? ReportBookPage() : _buildLoginPrompt();
+      case 5:
+        return username != null ? FavoritesPage(username: username) : _buildLoginPrompt();
       // Add cases for other indices if needed
       default:
         return Container(); // Return an empty container or handle default case
@@ -97,6 +106,7 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
   }
 
   Widget _buildHomePage() {
+    final request = context.read<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bookoo'),
@@ -209,8 +219,100 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
                                 },
                                 title: Text("${snapshot.data![index].fields.link}")),
                             ListTile(
+                                onTap: () async {
+                                  if (username==null){
+                                          await showDialog<void>(
+                  context: context,
+                  builder: (context) =>_buildLoginPrompt());
+                                        }else{
+                                  title="${snapshot.data![index].fields.title}";
+              await showDialog<void>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                        content: Stack(
+                          clipBehavior: Clip.none,
+                          children: <Widget>[
+                            Positioned(
+                              right: -40,
+                              top: -40,
+                              child: InkResponse(
                                 onTap: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const CircleAvatar(
+                                  child: Icon(Icons.close)
+                                ),
+                              ),
+                            ),
+                            Form(
+                              key: _formKey,
+                              child: Column(
+                                
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  const Text("Favorite A Book?"),
+                                  const Text("Title"),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: TextFormField(
+                                      initialValue: title,
+            decoration: InputDecoration(
+              hintText: "Title",
+              labelText: "Title",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+            ),
+            onChanged: (String? value) {
+              setState(() {
+                title = value!;
+              });
+            },
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "Judul tidak boleh kosong!";
+              }
+              return null;
+            },
+          ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: ElevatedButton(
+                                      child: const Text('Submit'),
+                                      onPressed: () async {
+                                        
+                                        if (_formKey.currentState!.validate()) {
+        final response = await request.postJson(
+        "https://bookoo-e11-tk.pbp.cs.ui.ac.id/favorite_flutter/",
+        jsonEncode(<String, String>{
+            'title': title??'default value',
+        }));
+        if (response['status'] == 'success') {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(
+            content: Text("Produk baru berhasil disimpan!"),
+            ));
+        } else {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(
+                content:
+                    Text("Terdapat kesalahan, silakan coba lagi."),
+            ));
+        }
+                                        }
+                                      }
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ));
+            }
                                   
+                                
                                 },
                                 title: const Text("Favorite It"))
                           ],
@@ -282,7 +384,7 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
                   // Logout logic (replace <APP_URL_KAMU> with your app's URL)
                   final request = context.read<CookieRequest>();
                   final response = await request.logout(
-                    "http://localhost:8000/auth/logout/",
+                    "https://bookoo-e11-tk.pbp.cs.ui.ac.id/logout/",
                   );
                   String message = response["message"];
                   String uname = response["username"];

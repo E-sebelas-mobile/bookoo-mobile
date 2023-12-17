@@ -22,10 +22,13 @@ class FavoritesPage extends StatefulWidget {
 }
 
 class _FavoritesPageState extends State<FavoritesPage> {
+  int? userid=UserUtility.user_id;
+  List<Favorite> all_Favorite = [];
+  List<Favorite> list_Favorite = [];
   Future<List<Favorite>> fetchFavorite() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
     var url = Uri.parse(
-        'https://bookoo-e11-tk.pbp.cs.ui.ac.id/get_favorites/');
+        'https://bookoo-e11-tk.pbp.cs.ui.ac.id/all_favorites/');
     var response = await http.get(
         url,
         headers: {"Content-Type": "application/json"},
@@ -35,13 +38,18 @@ class _FavoritesPageState extends State<FavoritesPage> {
     var data = jsonDecode(utf8.decode(response.bodyBytes));
 
     // melakukan konversi data json menjadi object Favorite
-    List<Favorite> list_Favorite = [];
+    
     for (var d in data) {
         if (d != null) {
-          if (d.fields.user == UserUtility.user_id ){
-            list_Favorite.add(Favorite.fromJson(d));
-          }
+          all_Favorite.add(Favorite.fromJson(d));
+          debugPrint(userid.toString());
         }
+    }
+    for (var d in all_Favorite){
+      if (d.fields.user==userid ){
+        list_Favorite.add(d);
+
+      }
     }
     return list_Favorite;
   }
@@ -49,7 +57,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
   @override
   Widget build(BuildContext context) {
   return Scaffold(appBar: AppBar(
-        title: const Text('Bookoo'),
+        title: const Text('Favorites'),
       ),
       body: Column( 
           children: [
