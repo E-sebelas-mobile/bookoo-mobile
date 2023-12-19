@@ -1,3 +1,4 @@
+import 'package:bookoo_mobile/favorite_form.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
@@ -82,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   int? userid=UserUtility.user_id;
   String? search;
-  String? title;
+  String title="";
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController controller = new TextEditingController();
@@ -147,7 +148,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildHomePage() {
-    final request = context.read<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bookoo'),
@@ -269,9 +269,62 @@ class _MyHomePageState extends State<MyHomePage> {
                   builder: (context) =>_buildLoginPrompt());
                                         }else{
                                   title="${snapshot.data![index].fields.title}";
-              await showDialog<void>(
-                  context: context,
-                  builder: (context) => AlertDialog(
+                                  _showFavoritePopup(context, title);
+                                  }},
+                                title: const Text("Favorite It"))
+                          ],
+                        ),
+                      ));
+                }
+              }
+            }
+            )
+            )
+            ]
+            )
+    );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  Widget _buildLoginPrompt() {
+  return AlertDialog(
+    title: const Text('Login Required'),
+    content: const Text('You must log in to access this feature.'),
+    actions: <Widget>[
+      TextButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginForm()),
+          );
+        },
+        child: const Text('Login'),
+      )
+    ],
+  );
+}
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _getPage(_selectedIndex),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+
+  Future<void> _showFavoritePopup(BuildContext context, String title) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context){
+                    return AlertDialog(
                         content: Stack(
                           clipBehavior: Clip.none,
                           children: <Widget>[
@@ -326,15 +379,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                       onPressed: () async {
                                         
                                         if (_formKey.currentState!.validate()) {
+                                          final request = context.read<CookieRequest>();
         final response = await request.postJson(
-        "https://bookoo-e11-tk.pbp.cs.ui.ac.id/favorite_flutter/",
+        "http://localhost:8000/favorite_flutter/",
         jsonEncode(<String, String>{
-            'title': title??'default value',
+            'title': title,
         }));
         if (response['status'] == 'success') {
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(
-            content: Text("Produk baru berhasil disimpan!"),
+            content: Text("Berhasil difavoritkan"),
             ));
         } else {
             ScaffoldMessenger.of(context)
@@ -352,55 +406,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ],
                         ),
-                      ));
-            }},
-                                title: const Text("Favorite It"))
-                          ],
-                        ),
-                      ));
-                }
-              }
-            }
-            )
-            )
-            ]
-            )
-    );
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  Widget _buildLoginPrompt() {
-  return AlertDialog(
-    title: const Text('Login Required'),
-    content: const Text('You must log in to access this feature.'),
-    actions: <Widget>[
-      TextButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => LoginForm()),
-          );
-        },
-        child: const Text('Login'),
-      )
-    ],
-  );
-}
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _getPage(_selectedIndex),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
-    );
+                                        );});
   }
 
   Future<void> _showLogoutConfirmation(BuildContext context) async {
@@ -424,7 +430,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   // Logout logic (replace <APP_URL_KAMU> with your app's URL)
                   final request = context.read<CookieRequest>();
                   final response = await request.logout(
-                    "https://bookoo-e11-tk.pbp.cs.ui.ac.id/auth/logout/",
+                    "http://localhost:8000/auth/logout/",
                   );
                   String message = response["message"];
                   String uname = response["username"];

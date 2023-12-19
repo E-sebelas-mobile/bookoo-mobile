@@ -15,6 +15,7 @@ import 'filter_library.dart';
 import 'reportbookstuff/menuReport.dart';
 import 'user_utility.dart';
 import 'favorites.dart';
+import 'favorite_form.dart';
 import 'reportbookstuff/menuReport.dart';
 
 
@@ -32,7 +33,7 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
   int _selectedIndex = 0;
   int? userid=UserUtility.user_id;
   String? search;
-  String? title;
+  String title="";
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController controller = new TextEditingController();
@@ -228,9 +229,65 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
                   builder: (context) =>_buildLoginPrompt());
                                         }else{
                                   title="${snapshot.data![index].fields.title}";
-              await showDialog<void>(
-                  context: context,
-                  builder: (context) => AlertDialog(
+                                  _showFavoritePopup(context, title);
+            }
+                                  
+                                
+                                },
+                                title: const Text("Favorite It"))
+                          ],
+                        ),
+                      ));
+                }
+              }
+            }
+            )
+            )
+            ]
+            )
+    );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  Widget _buildLoginPrompt() {
+  return AlertDialog(
+    title: const Text('Login Required'),
+    content: const Text('You must log in to access this feature.'),
+    actions: <Widget>[
+      TextButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginForm()),
+          );
+        },
+        child: const Text('Login'),
+      )
+    ],
+  );
+}
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _getPage(_selectedIndex),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+
+  Future<void> _showFavoritePopup(BuildContext context, String title) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context){
+                    return AlertDialog(
                         content: Stack(
                           clipBehavior: Clip.none,
                           children: <Widget>[
@@ -285,15 +342,16 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
                                       onPressed: () async {
                                         
                                         if (_formKey.currentState!.validate()) {
+                                          final request = context.read<CookieRequest>();
         final response = await request.postJson(
-        "https://bookoo-e11-tk.pbp.cs.ui.ac.id/favorite_flutter/",
+        "http://localhost:8000/favorite_flutter/",
         jsonEncode(<String, String>{
-            'title': title??'default value',
+            'title': title,
         }));
         if (response['status'] == 'success') {
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(
-            content: Text("Produk baru berhasil disimpan!"),
+            content: Text("Berhasil difavoritkan"),
             ));
         } else {
             ScaffoldMessenger.of(context)
@@ -311,58 +369,7 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
                             ),
                           ],
                         ),
-                      ));
-            }
-                                  
-                                
-                                },
-                                title: const Text("Favorite It"))
-                          ],
-                        ),
-                      ));
-                }
-              }
-            }
-            )
-            )
-            ]
-            )
-    );
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  Widget _buildLoginPrompt() {
-  return AlertDialog(
-    title: const Text('Login Required'),
-    content: const Text('You must log in to access this feature.'),
-    actions: <Widget>[
-      TextButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => LoginForm()),
-          );
-        },
-        child: const Text('Login'),
-      )
-    ],
-  );
-}
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _getPage(_selectedIndex),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
-    );
+                                        );});
   }
 
   Future<void> _showLogoutConfirmation(BuildContext context) async {
