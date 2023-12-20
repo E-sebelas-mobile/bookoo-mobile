@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:bookoo_mobile/reportbookstuff/report.dart';
-import 'package:bookoo_mobile/user_utility.dart';
+import 'package:bookoo_mobile/reportbookstuff/reportDetail.dart';
 import 'package:bookoo_mobile/reportbookstuff/reportForm.dart';
 
-class ReportBookPage extends StatefulWidget {
-  const ReportBookPage({Key? key}) : super(key: key);
+class ReportBookPageAdmin extends StatefulWidget {
+  const ReportBookPageAdmin({Key? key}) : super(key: key);
 
   @override
-  _ReportBookPageState createState() => _ReportBookPageState();
+  _ReportBookPageStateAdmin createState() => _ReportBookPageStateAdmin();
 }
 
-class _ReportBookPageState extends State<ReportBookPage> {
+class _ReportBookPageStateAdmin extends State<ReportBookPageAdmin> {
   TextEditingController _searchController = TextEditingController();
   List<Report> _filteredProducts = [];
   List<Report> _products = [];
@@ -26,16 +26,13 @@ class _ReportBookPageState extends State<ReportBookPage> {
 
   Future<List<Report>> fetchProduct() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-    var url = Uri.parse(
-        'https://bookoo-e11-tk.pbp.cs.ui.ac.id/modulreport/json/${UserUtility.user_id.toString()}/');
+    var url = Uri.parse('https://bookoo-e11-tk.pbp.cs.ui.ac.id/modulreport/json/');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
     );
-
     // melakukan decode response menjadi bentuk json
     var data = jsonDecode(utf8.decode(response.bodyBytes));
-
     // melakukan konversi data json menjadi object Product
     List<Report> list_product = [];
     for (var d in data) {
@@ -68,52 +65,41 @@ class _ReportBookPageState extends State<ReportBookPage> {
     });
   }
 
-  Future<void> _deleteReport(int index) async {
-    try {
-      int reportIdToDelete = _filteredProducts[index].pk; // Assuming 'pk' is the ID field of your Product model
-      // print(reportIdToDelete);
-      var url = Uri.parse(
-          'https://bookoo-e11-tk.pbp.cs.ui.ac.id/modulreport/hapuslaporan/$reportIdToDelete/'); // Replace with your Django endpoint URL
-      var response = await http.post(url);
+  // Inside _ReportBookPageStateAdmin
 
-      if (response.statusCode == 200) {
-        print('Report deleted successfully');
-        setState(() {
-          _filteredProducts.removeAt(index);
-        });
-      } else {
-        print('Failed to delete report');
-        // Handle failure, show an error message or retry logic
-      }
-    } catch (error) {
-      print('Exception occurred while deleting report: $error');
-      // Handle exception or error, show an error message or retry logic
-    }
+  void _showDetailInformation(int index) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            ReportDetailPage(report: _filteredProducts[index], refreshCallback: _fetchProduct),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Report Book'),
+        title: const Text('Report Book Lists'),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BookReportForm(
-                refreshCallback: _fetchProduct, // Pass the callback function
-              ),
-            ),
-          ).then((_) {
-            if (mounted) {
-              _fetchProduct(); // Refresh data when returning from BookReportForm
-            }
-          });
-        },
-        child: Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //         builder: (context) => BookReportForm(
+      //           refreshCallback: _fetchProduct, // Pass the callback function
+      //         ),
+      //       ),
+      //     ).then((_) {
+      //       if (mounted) {
+      //         _fetchProduct(); // Refresh data when returning from BookReportForm
+      //       }
+      //     });
+      //   },
+      //   child: Icon(Icons.add),
+      // ),
       body: Column(
         children: [
           Padding(
@@ -147,6 +133,13 @@ class _ReportBookPageState extends State<ReportBookPage> {
                           style: const TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          "Report By: ${_filteredProducts[index].fields.username}",
+                          style: const TextStyle(
+                            fontStyle: FontStyle.italic,
                           ),
                         ),
                         const SizedBox(height: 10),
@@ -190,8 +183,8 @@ class _ReportBookPageState extends State<ReportBookPage> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             ElevatedButton(
-                              onPressed: () => _deleteReport(index),
-                              child: Text('Delete Report'),
+                              onPressed: () => _showDetailInformation(index),
+                              child: Text('Detail Information'),
                             ),
                           ],
                         ),
