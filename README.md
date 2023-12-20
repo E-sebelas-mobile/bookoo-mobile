@@ -7,6 +7,8 @@
 5. **Gyanamurti Adhikara Bano** - 2206082266
 
 ### **Tautan APK:**
+https://install.appcenter.ms/orgs/e011/apps/bookoo-mobile/distribution_groups/public
+[![Build status](https://build.appcenter.ms/v0.1/apps/409dfe6d-a078-45b7-b483-ceac1e5e4966/branches/main/badge)](https://appcenter.ms)
 
 ### **Deskripsi Aplikasi:**
 Sebuah versi mobile dari website kami, yaitu website bertema literasi oleh yang menyediakan platform untuk user agar dapat membaca buku dengan katalog kami, review buku favorit, fitur personal diary, dan disertai dengan fungsi servis seperti request buku dan report . Terinspirasi dari website bertema literasi terkemuka seperti Goodreads dan LibraryThing.
