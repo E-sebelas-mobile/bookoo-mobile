@@ -40,7 +40,7 @@ Sebuah versi mobile dari website kami, yaitu website bertema literasi oleh yang 
    - **Anggota:** **Gyanamurti Adhikara Bano**
      
 7. **Deployment** 📔
-   - **Penjelasan:** Mengurus deployment aplikasi ke cloud platform menjadi aplikasi utuh.
+   - **Penjelasan:** Mengurus deployment aplikasi ke cloud platform menjadi aplikasi utuh. Menggunakan platform Microsoft App Center.
    - **Anggota:** **Rafli Aditya Shaista**
 
 8. **Main Page/Design** 📔
