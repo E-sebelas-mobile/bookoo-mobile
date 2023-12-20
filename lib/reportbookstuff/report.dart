@@ -1,25 +1,25 @@
 // To parse this JSON data, do
 //
-//     final product = productFromJson(jsonString);
+//     final report = reportFromJson(jsonString);
 
 import 'dart:convert';
 
-List<Product> productFromJson(String str) => List<Product>.from(json.decode(str).map((x) => Product.fromJson(x)));
+List<Report> reportFromJson(String str) => List<Report>.from(json.decode(str).map((x) => Report.fromJson(x)));
 
-String productToJson(List<Product> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String reportToJson(List<Report> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class Product {
+class Report {
     String model;
     int pk;
     Fields fields;
 
-    Product({
+    Report({
         required this.model,
         required this.pk,
         required this.fields,
     });
 
-    factory Product.fromJson(Map<String, dynamic> json) => Product(
+    factory Report.fromJson(Map<String, dynamic> json) => Report(
         model: json["model"],
         pk: json["pk"],
         fields: Fields.fromJson(json["fields"]),
@@ -40,6 +40,8 @@ class Fields {
     int user;
     String status;
     DateTime dateAdded;
+    String username;
+    String adminResponse;
 
     Fields({
         required this.bookTitle,
@@ -49,6 +51,8 @@ class Fields {
         required this.user,
         required this.status,
         required this.dateAdded,
+        required this.username,
+        required this.adminResponse,
     });
 
     factory Fields.fromJson(Map<String, dynamic> json) => Fields(
@@ -59,6 +63,8 @@ class Fields {
         user: json["user"],
         status: json["status"],
         dateAdded: DateTime.parse(json["date_added"]),
+        username: json["username"],
+        adminResponse: json["admin_response"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -69,5 +75,7 @@ class Fields {
         "user": user,
         "status": status,
         "date_added": "${dateAdded.year.toString().padLeft(4, '0')}-${dateAdded.month.toString().padLeft(2, '0')}-${dateAdded.day.toString().padLeft(2, '0')}",
+        "username": username,
+        "admin_response": adminResponse,
     };
 }

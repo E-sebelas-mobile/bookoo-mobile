@@ -101,7 +101,7 @@ class _RegisterPageState extends State<RegistrationForm> {
 
                 // Check credentials
                 final response = await request.postJson(
-                  "http://localhost:8000/auth/register/",
+                  "https://bookoo-e11-tk.pbp.cs.ui.ac.id/auth/register/",
                   payload,
                 );
 

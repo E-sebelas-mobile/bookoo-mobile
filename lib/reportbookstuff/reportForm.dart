@@ -1,6 +1,5 @@
-import 'package:bookoo_mobile/reportbookstuff/menuReport.dart';
+import 'package:bookoo_mobile/user_utility.dart';
 import 'package:flutter/material.dart';
-import 'package:bookoo_mobile/main.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:bookoo_mobile/models/books.dart';
@@ -33,7 +32,7 @@ class _BookReportFormState extends State<BookReportForm> {
   }
 
   Future<void> fetchBookTitles() async {
-    var url = Uri.parse('http://localhost:8000/get_books_json/');
+    var url = Uri.parse('https://bookoo-e11-tk.pbp.cs.ui.ac.id/get_books_json/');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -43,14 +42,18 @@ class _BookReportFormState extends State<BookReportForm> {
     Set<String> titles = {};
     for (var d in data) {
       if (d != null) {
-        titles.add(
-            Fields.fromJson(d['fields']).title); // Access 'title' from 'Fields'
+        titles.add(Fields.fromJson(d['fields']).title);
       }
     }
+
+    // Convert set to list, sort it, and convert it back to set
     setState(() {
-      bookTitles = titles; // Update the state with fetched titles
+      var sortedTitles = titles.toList()..sort();
+      bookTitles = Set<String>.from(sortedTitles);
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +64,6 @@ class _BookReportFormState extends State<BookReportForm> {
         preferredSize: Size.fromHeight(kToolbarHeight),
         child: AppBar(
           title: Center(child: Text('Form Report Buku')),
-          backgroundColor: Colors.blueGrey,
-          foregroundColor: Colors.white,
           centerTitle: true, // Center the title
         ),
       ),
@@ -73,12 +74,13 @@ class _BookReportFormState extends State<BookReportForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
+              Flexible(
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       DropdownButtonFormField<String>(
+                        isExpanded: true,
                         value: _bookTitle,
                         items: bookTitles.map((String value) {
                           return DropdownMenuItem<String>(
@@ -202,12 +204,13 @@ class _BookReportFormState extends State<BookReportForm> {
                         // Kirim ke Django dan tunggu respons
                             // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                             final response = await request.postJson(
-                            "http://localhost:8000/modulreport/simpanlaporanflutter/",
+                            "https://bookoo-e11-tk.pbp.cs.ui.ac.id/modulreport/simpanlaporanflutter/",
                             jsonEncode(<String, String>{
                                   'book_title': _bookTitle ?? '',
                                   'issue_type': _issueType ?? '',
                                   'other_issue': _otherIssueType,
                                   'description': _issueDescription,
+                                  'username': UserUtility.username ?? '',
                                 // TODO: Sesuaikan field data sesuai dengan aplikasimu
                             }));
                             if (response['status'] == 'success') {
