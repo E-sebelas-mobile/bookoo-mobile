@@ -29,6 +29,18 @@ class _ForumPageState extends State<ForumPage> {
   }
 
   Future<void> submitPost() async {
+    // Check if any of the fields are empty
+  if (_authorController.text.isEmpty ||
+      _titleController.text.isEmpty ||
+      _contentController.text.isEmpty ||
+      _bookNameController.text.isEmpty ||
+      _ratingController.text.isEmpty) {
+    // Show an error message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Please fill in all fields")),
+    );
+    return; // Exit the function if validation fails
+  }
   // Define the URL of the Django endpoint
   var url = Uri.parse('https://bookoo-e11-tk.pbp.cs.ui.ac.id/forums/create-flutter/');
   
