@@ -3,6 +3,7 @@ import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'login.dart';
 import 'menu.dart';
+import 'package:bookoo_mobile/reportbookstuff/menuReportAdmin.dart';
 
 void main() {
   runApp(MyApp());
@@ -59,7 +60,7 @@ class _AdminPageState extends State<AdminPage> {
                   // Logout logic (replace <APP_URL_KAMU> with your app's URL)
                   final request = context.read<CookieRequest>();
                   final response = await request.logout(
-                    "http://localhost:8000/auth/logout/",
+                    "https://bookoo-e11-tk.pbp.cs.ui.ac.id/auth/logout/",
                   );
                   String message = response["message"];
                   String uname = response["username"];
@@ -68,16 +69,17 @@ class _AdminPageState extends State<AdminPage> {
                       content: Text("$message Sampai jumpa, $uname."),
                     ),
                   );
-                    setState(() {
-                      username = null; // Update username to null on logout
-                    });
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MyHomePage(username: null),
-                      ),
-                      (Route<dynamic> route) => false, // Remove all routes below MyHomePage
-                    );
+                  setState(() {
+                    username = null; // Update username to null on logout
+                  });
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyHomePage(username: null),
+                    ),
+                    (Route<dynamic> route) =>
+                        false, // Remove all routes below MyHomePage
+                  );
                 }
               },
               child: const Text('Logout'),
@@ -87,6 +89,7 @@ class _AdminPageState extends State<AdminPage> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,7 +151,9 @@ class _AdminPageState extends State<AdminPage> {
                   InventoryCard(InventoryItem(
                       "Placeholder 2", Icons.create, Color(0xFF427D9D))),
                   InventoryCard(InventoryItem(
-                      "Placeholder 3", Icons.logout, Color(0xFF9BBEC8))),
+                      "Lihat Daftar Report",
+                      Icons.description,
+                      Color(0xFF9BBEC8))), // Updated placeholder
                 ],
               ),
             ],
@@ -178,6 +183,12 @@ class InventoryCard extends StatelessWidget {
       color: item.color,
       child: InkWell(
         onTap: () {
+          if (item.name == "Lihat Daftar Report") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ReportBookPageAdmin()),
+            );
+          }
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
