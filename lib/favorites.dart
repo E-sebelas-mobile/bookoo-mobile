@@ -12,7 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'filter_library.dart';
 import 'reportbookstuff/menuReport.dart';
 import 'user_utility.dart';
-
+import 'menu.dart';
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({Key? key, required this.username}) : super(key: key);
   final String? username;
@@ -25,7 +25,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
   int? userid=UserUtility.user_id;
   List<Favorite> all_Favorite = [];
   List<Favorite> list_Favorite = [];
-  Future<List<Favorite>> fetchFavorite() async {
+  List<String> list_FavoriteTitles = [];
+  String? username;
+
+  Future<List<String>> fetchFavorite() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
     var url = Uri.parse(
         'https://bookoo-e11-tk.pbp.cs.ui.ac.id/all_favorites/');
@@ -42,7 +45,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
     for (var d in data) {
         if (d != null) {
           all_Favorite.add(Favorite.fromJson(d));
-          debugPrint(userid.toString());
         }
     }
     for (var d in all_Favorite){
@@ -51,14 +53,106 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
       }
     }
-    return list_Favorite;
-  }
+    for (var d in list_Favorite){
+      if (list_FavoriteTitles.contains(d.fields.title)){
+        
 
+      }else{
+        list_FavoriteTitles.add(d.fields.title);
+      }
+    }
+    return list_FavoriteTitles;
+  }
+  Future<void> _showLogoutConfirmation(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Logout'),
+          content: const Text('Are you sure you want to logout?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop(); // Close the dialog
+                if (username != null) {
+                  // Logout logic (replace <APP_URL_KAMU> with your app's URL)
+                  final request = context.read<CookieRequest>();
+                  final response = await request.logout(
+                    "https://bookoo-e11-tk.pbp.cs.ui.ac.id/auth/logout/",
+                  );
+                  String message = response["message"];
+                  String uname = response["username"];
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("$message Sampai jumpa, $uname."),
+                    ),
+                  );
+                  setState(() {
+                    username = null; // Update username to null on logout
+                  });
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyHomePage(username: null),
+                    ),
+                    (Route<dynamic> route) =>
+                        false, // Remove all routes below MyHomePage
+                  );
+                }
+              },
+              child: const Text('Logout'),
+            )
+          ],
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
-  return Scaffold(appBar: AppBar(
-        title: const Text('Favorites'),
-      ),
+    username= widget.username;
+  return Scaffold(
+    appBar: AppBar(
+          title: const Text('Bookoo'),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Row(
+                children: [
+                  if (username != null)
+                    Text(
+                      'Hello $username!',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  IconButton(
+                    icon: const Icon(Icons.person),
+                    iconSize: 40.0,
+                    onPressed: () {
+                      if (username != null) {
+                        _showLogoutConfirmation(context);
+                      } else {
+                        // Navigate to login form
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginForm()),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       body: Column( 
           children: [
             const Padding(
@@ -101,7 +195,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                           children: [
                             const SizedBox(height: 10),
                             Text(
-                              "${snapshot.data![index].fields.title}",
+                              "${snapshot.data![index]}",
                               style: const TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
@@ -117,5 +211,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
             )
             ]
             ));
+  
 }
 }

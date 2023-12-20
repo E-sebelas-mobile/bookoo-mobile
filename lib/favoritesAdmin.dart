@@ -24,8 +24,13 @@ class FavoritesAdminPage extends StatefulWidget {
 class _FavoritesPageState extends State<FavoritesAdminPage> {
   int? userid=UserUtility.user_id;
   List<Favorite> all_Favorite = [];
-  List<int> id_Favorite = [];
-  Future<List<Favorite>> fetchFavorite() async {
+  List<Favorite> id_Favorite = [];
+  List<Favorite> cut_Favorite = [];
+  List<String> titles=[];
+  List<String> ids=[];
+  List titleID=[];
+  List FilteredtitleID=[];
+  Future<List> fetchFavorite() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
     var url = Uri.parse(
         'https://bookoo-e11-tk.pbp.cs.ui.ac.id/all_favorites/');
@@ -41,16 +46,25 @@ class _FavoritesPageState extends State<FavoritesAdminPage> {
     
     for (var d in data) {
         if (d != null) {
+          
           all_Favorite.add(Favorite.fromJson(d));
           debugPrint(userid.toString());
+
         }
     }
     for (var d in all_Favorite){
-      if (d.fields.user==userid ){
-        id_Favorite.add(d.fields.user);
+      var temp ={d.fields.user:d.fields.title};
+      debugPrint(temp.toString());
+      titleID.add(temp);
+    }
+    for (var d in titleID){
+      if (FilteredtitleID.contains(d)){
 
+      }else{
+        FilteredtitleID.add(d);
       }
     }
+    debugPrint(FilteredtitleID.toString());
     return all_Favorite;
   }
 
@@ -109,7 +123,7 @@ class _FavoritesPageState extends State<FavoritesAdminPage> {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              "Favorited by ID:${snapshot.data![index].fields.title}",
+                              "Favorited by ID:${snapshot.data![index].fields.user}",
                               style: const TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,

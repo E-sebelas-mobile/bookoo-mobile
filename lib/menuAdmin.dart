@@ -1,10 +1,11 @@
+import 'package:bookoo_mobile/user_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'login.dart';
 import 'menu.dart';
 import 'package:bookoo_mobile/reportbookstuff/menuReportAdmin.dart';
-
+import 'favoritesAdmin.dart';
 void main() {
   runApp(MyApp());
 }
@@ -149,7 +150,7 @@ class _AdminPageState extends State<AdminPage> {
                   InventoryCard(InventoryItem(
                       "Placeholder 1", Icons.library_books, Color(0xFF164863))),
                   InventoryCard(InventoryItem(
-                      "Placeholder 2", Icons.create, Color(0xFF427D9D))),
+                      "Daftar Favorite User", Icons.heart_broken, Color(0xFF427D9D))),
                   InventoryCard(InventoryItem(
                       "Lihat Daftar Report",
                       Icons.description,
@@ -183,7 +184,12 @@ class InventoryCard extends StatelessWidget {
       color: item.color,
       child: InkWell(
         onTap: () {
-          if (item.name == "Lihat Daftar Report") {
+          if (item.name == "Daftar Favorite User") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => FavoritesAdminPage(username: UserUtility.username)),
+            );
+          } else if (item.name == "Lihat Daftar Report") {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ReportBookPageAdmin()),
