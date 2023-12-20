@@ -343,11 +343,12 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
                                         if (_formKey.currentState!.validate()) {
                                           final request = context.read<CookieRequest>();
         final response = await request.postJson(
-        "http://localhost:8000/favorite_flutter/",
+        "https://bookoo-e11-tk.pbp.cs.ui.ac.id/favorite_flutter/",
         jsonEncode(<String, String>{
             'title': title,
         }));
         if (response['status'] == 'success') {
+            Navigator.pop(context);
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(
             content: Text("Berhasil difavoritkan."),

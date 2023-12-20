@@ -204,7 +204,7 @@ class _BookReportFormState extends State<BookReportForm> {
                         // Kirim ke Django dan tunggu respons
                             // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                             final response = await request.postJson(
-                            "https://bookoo-e11-tk.pbp.cs.ui.ac.id/modulreport/simpanlaporanflutter/",
+                            "http://localhost:8000/modulreport/simpanlaporanflutter/",
                             jsonEncode(<String, String>{
                                   'book_title': _bookTitle ?? '',
                                   'issue_type': _issueType ?? '',
@@ -217,6 +217,7 @@ class _BookReportFormState extends State<BookReportForm> {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(const SnackBar(
                                 content: Text("Produk baru berhasil disimpan!"),
+                                
                                 ));
                                 widget.refreshCallback(); // Execute the callback
 
