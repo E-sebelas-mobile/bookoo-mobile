@@ -350,7 +350,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       const Text("Favorite A Book?"),
-                      const Text("Title"),
                       Padding(
                         padding: const EdgeInsets.all(8),
                         child: TextFormField(

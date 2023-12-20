@@ -310,7 +310,6 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   const Text("Favorite A Book?"),
-                                  const Text("Title"),
                                   Padding(
                                     padding: const EdgeInsets.all(8),
                                     child: TextFormField(
@@ -351,7 +350,7 @@ class _FilteredLibraryPageState extends State<FilteredLibraryPage> {
         if (response['status'] == 'success') {
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(
-            content: Text("Berhasil difavoritkan"),
+            content: Text("Berhasil difavoritkan."),
             ));
         } else {
             ScaffoldMessenger.of(context)

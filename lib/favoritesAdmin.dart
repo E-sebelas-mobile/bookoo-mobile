@@ -64,7 +64,7 @@ class _FavoritesPageState extends State<FavoritesAdminPage> {
             const Padding(
               padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
               child: Text(
-                "Your Favorites",
+                "Favorites",
                 textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 30,
@@ -82,7 +82,7 @@ class _FavoritesPageState extends State<FavoritesAdminPage> {
                   return const Column(
                     children: [
                       Text(
-                        "Tidak ada data produk.",
+                        "Tidak ada data.",
                         style:
                         TextStyle(color: Color(0xff59A5D8), fontSize: 20),
                       ),
@@ -102,6 +102,14 @@ class _FavoritesPageState extends State<FavoritesAdminPage> {
                             const SizedBox(height: 10),
                             Text(
                               "${snapshot.data![index].fields.title}",
+                              style: const TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              "Favorited by ID:${snapshot.data![index].fields.title}",
                               style: const TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.bold,
