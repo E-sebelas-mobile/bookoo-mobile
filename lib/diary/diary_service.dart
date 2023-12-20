@@ -1,24 +1,37 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'diary_model.dart';
 
 class DiaryService {
-  // Add a new diary entry
+  final String apiUrl = 'http://localhost:3000/diaries';
+
   Future<void> addDiaryEntry(DiaryEntry entry) async {
-    // Implement the logic to add the entry to the database
+    await http.post(
+      Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(entry.toMap()),
+    );
   }
 
-  // Update an existing diary entry
   Future<void> updateDiaryEntry(DiaryEntry entry) async {
-    // Implement the logic to update the entry in the database
+    await http.put(
+      Uri.parse('$apiUrl/${entry.id}'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(entry.toMap()),
+    );
   }
 
-  // Delete a diary entry
   Future<void> deleteDiaryEntry(String id) async {
-    // Implement the logic to delete the entry from the database
+    await http.delete(Uri.parse('$apiUrl/$id'));
   }
 
-  // Get a list of all diary entries
   Future<List<DiaryEntry>> getDiaryEntries() async {
-    // Implement the logic to retrieve all entries from the database
-    return []; // Return a list of entries
+    final response = await http.get(Uri.parse(apiUrl));
+    if (response.statusCode == 200) {
+      final List<dynamic> diaryJson = json.decode(response.body);
+      return diaryJson.map((json) => DiaryEntry.fromMap(json)).toList();
+    } else {
+      throw Exception('Failed to load diary entries');
+    }
   }
 }
