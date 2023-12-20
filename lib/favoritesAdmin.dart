@@ -13,18 +13,18 @@ import 'filter_library.dart';
 import 'reportbookstuff/menuReport.dart';
 import 'user_utility.dart';
 
-class FavoritesPage extends StatefulWidget {
-  const FavoritesPage({Key? key, required this.username}) : super(key: key);
+class FavoritesAdminPage extends StatefulWidget {
+  const FavoritesAdminPage({Key? key, required this.username}) : super(key: key);
   final String? username;
 
   @override
   _FavoritesPageState createState() => _FavoritesPageState();
 }
 
-class _FavoritesPageState extends State<FavoritesPage> {
+class _FavoritesPageState extends State<FavoritesAdminPage> {
   int? userid=UserUtility.user_id;
   List<Favorite> all_Favorite = [];
-  List<Favorite> list_Favorite = [];
+  List<int> id_Favorite = [];
   Future<List<Favorite>> fetchFavorite() async {
     // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
     var url = Uri.parse(
@@ -47,11 +47,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
     }
     for (var d in all_Favorite){
       if (d.fields.user==userid ){
-        list_Favorite.add(d);
+        id_Favorite.add(d.fields.user);
 
       }
     }
-    return list_Favorite;
+    return all_Favorite;
   }
 
   @override

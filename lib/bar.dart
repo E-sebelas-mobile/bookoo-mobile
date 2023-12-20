@@ -35,6 +35,10 @@ class CustomBottomNavigationBar extends StatelessWidget {
           icon: Icon(Icons.book),
           label: 'Journal',
         ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.heart_broken),
+          label: 'Favorites',
+        ),
       ],
       currentIndex: currentIndex,
       selectedItemColor: Theme.of(context).primaryColor,
