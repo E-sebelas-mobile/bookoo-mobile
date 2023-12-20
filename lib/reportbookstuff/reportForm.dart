@@ -216,7 +216,7 @@ class _BookReportFormState extends State<BookReportForm> {
                             if (response['status'] == 'success') {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(const SnackBar(
-                                content: Text("Produk baru berhasil disimpan!"),
+                                content: Text("Laporan baru berhasil disimpan!"),
                                 
                                 ));
                                 widget.refreshCallback(); // Execute the callback
