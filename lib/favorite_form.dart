@@ -84,7 +84,7 @@ class _FavoriteFormPageState extends State<FavoriteFormPage> {
                   // Kirim ke Django dan tunggu respons
                   // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                   final response = await request.postJson(
-                      "http://localhost:8000/favorite_flutter/",
+                      "https://bookoo-e11-tk.pbp.cs.ui.ac.id/favorite_flutter/",
                       jsonEncode(<String, String>{
                         'Title': _title,
                         // TODO: Sesuaikan field data sesuai dengan aplikasimu

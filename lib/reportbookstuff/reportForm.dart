@@ -204,7 +204,7 @@ class _BookReportFormState extends State<BookReportForm> {
                         // Kirim ke Django dan tunggu respons
                             // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                             final response = await request.postJson(
-                            "http://localhost:8000/modulreport/simpanlaporanflutter/",
+                            "https://bookoo-e11-tk.pbp.cs.ui.ac.id/modulreport/simpanlaporanflutter/",
                             jsonEncode(<String, String>{
                                   'book_title': _bookTitle ?? '',
                                   'issue_type': _issueType ?? '',
