@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:bookoo_mobile/models/books.dart';
-import 'package:bookoo_mobile/request.dart';
+import 'package:bookoo_mobile/requestpage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pbp_django_auth/pbp_django_auth.dart';
@@ -388,16 +388,18 @@ class _MyHomePageState extends State<MyHomePage> {
                                     }));
                                 if (response['status'] == 'success') {
                                   Navigator.pop(context);
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                    content: Text("Berhasil difavoritkan"),
-                                  ),);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text("Berhasil difavoritkan"),
+                                    ),
+                                  );
                                 } else {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                    content: Text(
-                                        "Terdapat kesalahan, silakan coba lagi."),
-                                  ),);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          "Terdapat kesalahan, silakan coba lagi."),
+                                    ),
+                                  );
                                 }
                               }
                             }),
